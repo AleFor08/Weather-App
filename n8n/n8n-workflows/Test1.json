@@ -1,0 +1,187 @@
+{
+  "name": "Test1",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contact us",
+        "formDescription": "We'll get back to you soon",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Company name"
+            },
+            {
+              "fieldLabel": "Contact Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "website"
+            },
+            {
+              "fieldLabel": "budget",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Notes",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -432,
+        -64
+      ],
+      "id": "1afedaf8-c1f6-4820-b9c9-2269c8bd5d93",
+      "name": "On form submission",
+      "webhookId": "3b4250f1-cf56-4263-9c35-11acabf98247"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.budget }}",
+                    "rightValue": 1000000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    },
+                    "id": "0043d5f1-1a7d-4451-bfef-bff062dc76d5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "056655ec-84ce-4d1f-aae8-c62c3af5cf43",
+                    "leftValue": "={{ $json.budget }}",
+                    "rightValue": 1000000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -64
+      ],
+      "id": "057dc57c-4cbd-448b-97ac-a255bdba5a0e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "=Hello {{ $json['Company name'] }}",
+        "emailType": "text",
+        "message": "={{ $json['Contact Name'] }} Stupid man",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -160
+      ],
+      "id": "747fa26d-96eb-4358-8fdc-b70a86cb802b",
+      "name": "Send a message",
+      "webhookId": "75f35b4f-fcac-421f-89d3-5fcaea61a306",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "boLqtgq58NC2JKCy",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Company name": "openai",
+          "Contact Name": "Kentia",
+          "Email": "kentialadu@gmail.com",
+          "website": "k.com",
+          "budget": 800000,
+          "Notes": "hello good sir",
+          "submittedAt": "2026-03-23T04:03:36.486-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7dd25a34-9ae2-4930-8805-c1ac8129e677",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ec7931723e45d17dda5231ee16b61eea6754e6b338037a07a2f734ef62c5007d"
+  },
+  "id": "ExkxJcrm7fgbaaIF",
+  "tags": []
+}

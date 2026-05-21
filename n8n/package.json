@@ -1,0 +1,15 @@
+{
+  "name": "n8n-backend",
+  "version": "1.0.0",
+  "description": "n8n backend",
+  "main": "n8n/index.js",
+  "scripts": {
+    "start": "n8n/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,69 @@
+# --- BACKEND DEPLOYMENT ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: cpp-backend
+        image: cpp-backend:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+# --- BACKEND SERVICE ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend # This name becomes the "DNS Address"
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8080      # The port the frontend will call
+      targetPort: 80  # The port inside the C++ container
+---
+# --- FRONTEND DEPLOYMENT ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: vue-frontend
+        image: vue-frontend:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+# --- FRONTEND SERVICE ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

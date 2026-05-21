@@ -1,0 +1,53 @@
+services:
+  db:
+    platform: linux/arm64
+    image: mysql:8.0
+    container_name: n8n-storage-weather
+    restart: "${RESTART}"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    ports:
+      - "${PORT_MYSQL}"
+    volumes:
+      - n8n-storage:/var/lib/mysql
+    
+  frontend:
+    build: ./vue
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: "${RESTART}"
+    ports:
+      - "${PORT_BACKEND}"
+    networks:
+      - app-network
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./n8n:/home/node/.n8n
+    depends_on:
+      - db
+
+
+  backend:
+    build: ./cpp
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  n8n-storage:
