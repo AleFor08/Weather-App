@@ -3,6 +3,9 @@
 
     const metrics = ref({
         status: 'disconnected',
+        updateFrequency: 0,
+        timePerUpdate: 0,
+        content: ''
     })
 
     const error = ref('')
@@ -58,6 +61,50 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h5 class="card-title opacity-75">Update Frequency</h5>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <span class="status-dot me-2"
+                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
+                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
+                                {{ metrics.updateFrequency }} ms
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h5 class="card-title opacity-75">Time Per Update</h5>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <span class="status-dot me-2"
+                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
+                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
+                                {{ metrics.timePerUpdate }} ms
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h5 class="card-title opacity-75">Content</h5>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <span class="status-dot me-2"
+                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
+                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
+                                {{ metrics.content }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>       
         </div>
         <br>
         <div v-if="error" class="alert alert-danger" role="alert">

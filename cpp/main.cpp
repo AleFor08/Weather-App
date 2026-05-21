@@ -24,6 +24,10 @@ using json = nlohmann::json;
 
 #include <iomanip>
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
 int updateFrequency = 500; // Update frequency
 
 int getUpdateFrequency() {
@@ -31,9 +35,23 @@ int getUpdateFrequency() {
 }
 
 int main() {
+    std::ifstream file("/shared/output.json");
+
+    // if (!file) {
+    //     std::cerr << "Could not open file\n";
+    //     return 1;
+    // }
+
+    std::string content(
+        (std::istreambuf_iterator<char>(file)),
+        std::istreambuf_iterator<char>()
+    );
+    
+    std::cout << content << std::endl;
+
     httplib::Server server;
 
-    server.Get("/metrics/stream", [](const httplib::Request&, httplib::Response& res) {
+    server.Get("/metrics/stream", [content](const httplib::Request&, httplib::Response& res) {
         // Set headers
         res.set_header("Content-Type", "text/event-stream");
         res.set_header("Cache-Control", "no-cache");
@@ -42,7 +60,7 @@ int main() {
 
         res.set_chunked_content_provider(
             "text/event-stream",
-            [](size_t, httplib::DataSink& sink) {
+            [content](size_t, httplib::DataSink& sink) {
                 auto start_time = std::chrono::steady_clock::now();
                 // Calculate system metrics
                 
@@ -52,7 +70,8 @@ int main() {
                 json data = {
                     {"status", "connected"},
                     {"updateFrequency", getUpdateFrequency()},
-                    {"timePerUpdate", diff_sec.count()}
+                    {"timePerUpdate", diff_sec.count()},
+                    {"content", content}
                 };
 
                 // Send data as a chunk

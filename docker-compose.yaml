@@ -24,6 +24,7 @@ services:
       - app-network
 
   n8n:
+    user: root
     image: n8nio/n8n:latest
     restart: "${RESTART}"
     ports:
@@ -32,11 +33,12 @@ services:
       - app-network
     environment:
       - TZ=${TIMEZONE}
+      - NODE_FUNCTION_ALLOW_BUILTIN=fs
     volumes:
       - ./n8n:/home/node/.n8n
+      - n8n-shared:/shared
     depends_on:
       - db
-
 
   backend:
     build: ./cpp
@@ -44,6 +46,10 @@ services:
       - "8080:80"
     networks:
       - app-network
+    volumes:
+      - n8n-shared:/shared
+    depends_on:
+      - db
 
 networks:
   app-network:
@@ -51,3 +57,4 @@ networks:
 
 volumes:
   n8n-storage:
+  n8n-shared:
