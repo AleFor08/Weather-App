@@ -1,139 +1,40 @@
 <script setup lang="ts">
-    import { ref, onMounted, onUnmounted, computed, h } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-    const metrics = ref({
-        status: 'disconnected',
-        updateFrequency: 0,
-        timePerUpdate: 0,
-        content: ''
-    })
+const weather = ref({
+  status: 'disconnected',
+  temp: null,
+  feels_like: null,
+  description: '',
+  humidity: null,
+  wind_speed: null,
+  temp_min: null,
+  temp_max: null,
+})
 
-    const error = ref('')
-
-    onMounted(() => {
-        const es = new EventSource('http://localhost:8080/metrics/stream');
-        es.onmessage = (ev) => {
-            try {
-                metrics.value = JSON.parse(ev.data);
-                console.log("Update");
-                error.value = '';
-            } catch (e) {
-                error.value = 'Error when parsing metrics: ' + e;
-            }
-    };
-    es.onerror = (err) => {
-        error.value = 'SSE-error: ' + err;
-        metrics.value.status = 'disconnected';
-        es.close();
-    };
-
-    onUnmounted(() => {
-        es.close();
-    });
-    });
-
-    const isActive = computed(() => {
-        const s = String(metrics.value.status ?? '').toLowerCase()
-        if (!s) return 'disconnected'
-        return s === 'connected' || s === 'online' || s === 'up' || s === 'true'
-    })
+onMounted(() => {
+  const es = new EventSource('http://localhost:8080/metrics/stream')
+  es.onmessage = (ev) => {
+    weather.value = { ...JSON.parse(ev.data), status: 'connected' }
+  }
+  es.onerror = () => {
+    weather.value.status = 'disconnected'
+    es.close()
+  }
+  onUnmounted(() => es.close())
+})
 </script>
 
 <template>
-    <div class="container mt-5">
-        <header class="mb-4">
-            <h1 class="display-5 fw-bold">Weather</h1>
-            <p class="text-muted">Realtime weather metrics</p>
-        </header>
-
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title opacity-75">System status</h5>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <span class="status-dot me-2"
-                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
-                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
-                                {{ metrics.status }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title opacity-75">Update Frequency</h5>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <span class="status-dot me-2"
-                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
-                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
-                                {{ metrics.updateFrequency }} ms
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title opacity-75">Time Per Update</h5>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <span class="status-dot me-2"
-                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
-                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
-                                {{ metrics.timePerUpdate }} ms
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="wx">
+    <div class="wx-card">
+      <div class="wx-city">📍 Oslo, Norge</div>
+      <div class="wx-temp">{{ weather.temp ?? '--' }}°</div>
+      <div class="wx-desc">{{ weather.description || 'Henter data...' }}</div>
+      <div class="wx-grid">
+        <div class="wx-stat">
+          <div class="wx-stat-label">Føles som</div>
+          <div class="wx-stat-value">{{ weather.feels_like ?? '--' }}°C</div>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm border-0 bg-dark text-white text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title opacity-75">Content</h5>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <span class="status-dot me-2"
-                                :style="{ backgroundColor: isActive ? '#28a745' : '#dc3545', boxShadow: isActive ? '0 0 8px #28a745' : '0 0 8px #dc3545' }"></span>
-                            <h3 class="mb-0" :class="isActive ? 'text-success' : 'text-danger'">
-                                {{ metrics.content }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>       
-        </div>
-        <br>
-        <div v-if="error" class="alert alert-danger" role="alert">
-            {{ error }}
-        </div>
-    </div>
-</template>
-
-<style scoped>
-    /* Bakgrunnsfarge for hele siden */
-    :global(body) {
-        background-color: #f8f9fa;
-    }
-
-    /* En liten animert prikk for statusen */
-    .status-dot {
-        height: 12px;
-        width: 12px;
-        background-color: #28a745;
-        border-radius: 50%;
-        display: inline-block;
-        box-shadow: 0 0 8px #28a745;
-    }
-
-    /* Gjør kortene litt "løftet" når man holder over dem */
-    .card {
-        transition: transform 0.2s ease-in-out;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-</style>
+        <div class="wx-stat">
+          <div class="wx-stat-label">Luftfu
