@@ -34,24 +34,25 @@ int getUpdateFrequency() {
     return updateFrequency;
 }
 
-int main() {
+std::string readSharedContent() {
     std::ifstream file("/shared/output.json");
 
-    // if (!file) {
-    //     std::cerr << "Could not open file\n";
-    //     return 1;
-    // }
+    if (!file) {
+        return "";
+    }
 
-    std::string content(
+    return std::string(
         (std::istreambuf_iterator<char>(file)),
         std::istreambuf_iterator<char>()
     );
-    
-    std::cout << content << std::endl;
+}
+
+int main() {
+    std::cout << readSharedContent() << std::endl;
 
     httplib::Server server;
 
-    server.Get("/metrics/stream", [content](const httplib::Request&, httplib::Response& res) {
+    server.Get("/metrics/stream", [](const httplib::Request&, httplib::Response& res) {
         // Set headers
         res.set_header("Content-Type", "text/event-stream");
         res.set_header("Cache-Control", "no-cache");
@@ -60,7 +61,8 @@ int main() {
 
         res.set_chunked_content_provider(
             "text/event-stream",
-            [content](size_t, httplib::DataSink& sink) {
+            [](size_t, httplib::DataSink& sink) {
+                std::string content = readSharedContent();
                 auto start_time = std::chrono::steady_clock::now();
                 // Calculate system metrics
                 
