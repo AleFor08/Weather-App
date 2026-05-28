@@ -67,6 +67,12 @@ int main() {
             "text/event-stream",
             [](size_t, httplib::DataSink& sink) {
                 std::string content = readSharedContent();
+                std::string contentMessage = content;
+                json parsedContent = json::parse(content, nullptr, false);
+                if (!parsedContent.is_discarded() && parsedContent.contains("message") && parsedContent["message"].is_string()) {
+                    contentMessage = parsedContent["message"].get<std::string>();
+                }
+
                 auto start_time = std::chrono::steady_clock::now();
                 // Calculate system metrics
                 
@@ -77,7 +83,7 @@ int main() {
                     {"status", "connected"},
                     {"updateFrequency", getUpdateFrequency()},
                     {"timePerUpdate", diff_sec.count()},
-                    {"content", content}
+                    {"content", contentMessage}
                 };
 
                 // Send data as a chunk
