@@ -1,32 +1,15 @@
 // Include necessary headers for HTTP server and JSON handling
 #include "httplib.h"
 #include "nlohmann/json.hpp"
-#include <time.h>
-
 #include <chrono>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <string>
 #include <thread>
 
 // Use nlohmann::json for JSON handling
 using json = nlohmann::json;
-
-// Include necessary headers for system information
-#include "sys/types.h"
-#include "sys/sysinfo.h"
-
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-
-#include "sys/times.h"
-
-#include <sys/statvfs.h>
-#include <cstring>
-
-#include <iomanip>
-
-#include <fstream>
-#include <iostream>
-#include <string>
 
 int updateFrequency = 500; // Update frequency
 
