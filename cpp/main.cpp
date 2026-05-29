@@ -37,15 +37,11 @@ int getUpdateFrequency() {
 std::string readSharedContent() {
     std::ifstream file("/shared/output.json");
 
-<<<<<<< Updated upstream
     if (!file) {
         return "";
     }
 
     return std::string(
-=======
-    std::string content(
->>>>>>> Stashed changes
         (std::istreambuf_iterator<char>(file)),
         std::istreambuf_iterator<char>()
     );
