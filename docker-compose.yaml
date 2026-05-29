@@ -14,6 +14,14 @@ services:
     volumes:
       - n8n-storage:/var/lib/mysql
   
+  frontend:
+    build: ./vue
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
   n8n:
     user: root
