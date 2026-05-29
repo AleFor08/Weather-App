@@ -65,7 +65,7 @@ const weatherEmoji = computed(() => {
                 </div>
                 <div class="stat">
                     <span class="stat-label">Tid per oppdatering</span>
-                    <span class="stat-value">{{ metrics.timePerUpdate }} ms</span>
+                    <span class="stat-value">{{ metrics.timePerUpdate }} ns</span>
                 </div>
             </div>
 
