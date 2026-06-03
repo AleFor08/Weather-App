@@ -7,7 +7,7 @@ const metrics = ref({
     desc: '',
     windspeed: 0,
     humidity: 0,
-    place: 'Oslo'
+    place: 'Haugesund'
 })
 
 onMounted(() => {
