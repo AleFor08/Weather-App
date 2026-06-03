@@ -7,22 +7,22 @@ const metrics = ref({
     desc: '',
     windspeed: 0,
     humidity: 0,
-    place: 'Haugesund'
+    place: 'Oslo'
 })
 
 onMounted(() => {
     const es = new EventSource('http://localhost:8080/metrics/stream')
     es.onmessage = (ev) => {
-      const raw = JSON.parse(ev.data)
-      const content = JSON.parse(raw.content)
-      metrics.value = {
-          status: raw.status,
-          temp: content.Temp,
-          desc: content.Desc,
-          windspeed: content.Windspeed,
-          humidity: content.Humidity,
-          place: content.Place
-      }
+        const raw = JSON.parse(ev.data)
+        const content = JSON.parse(raw.content)
+        metrics.value = {
+            status: raw.status,
+            temp: content.Temp,
+            desc: content.Desc,
+            windspeed: content.Windspeed,
+            humidity: content.Humidity,
+            place: content.Place
+        }
     }
     es.onerror = () => {
         metrics.value.status = 'disconnected'
@@ -57,12 +57,8 @@ onMounted(() => {
 }
 
 h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-
 .status { color: #28a745; margin-bottom: 1rem; }
-
 .temp { font-size: 5rem; font-weight: bold; margin: 0; }
-
 .desc { font-size: 1.3rem; opacity: 0.8; margin-bottom: 1rem; text-transform: capitalize; }
-
 p { font-size: 1.1rem; margin: 0.3rem; }
 </style>
