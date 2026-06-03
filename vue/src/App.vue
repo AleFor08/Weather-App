@@ -13,15 +13,22 @@ const metrics = ref({
 onMounted(() => {
     const es = new EventSource('http://localhost:8080/metrics/stream')
     es.onmessage = (ev) => {
-        const raw = JSON.parse(ev.data)
-        const content = JSON.parse(raw.content)
+        const raw = JSON.parse(ev.data) as any
+        let content: Record<string, any> = {}
+
+        try {
+            content = JSON.parse(raw.content)
+        } catch {
+            content = { desc: raw.content }
+        }
+
         metrics.value = {
-            status: raw.status,
-            temp: content.Temp,
-            desc: content.Desc,
-            windspeed: content.Windspeed,
-            humidity: content.Humidity,
-            place: content.Place
+            status: raw.status ?? 'disconnected',
+            temp: content.temp ?? 0,
+            desc: content.desc ?? String(raw.content),
+            windspeed: content.windspeed ?? 0,
+            humidity: content.humidity ?? 0,
+            place: content.place ?? 'Haugesund'
         }
     }
     es.onerror = () => {
