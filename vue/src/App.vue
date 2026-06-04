@@ -7,7 +7,7 @@ const metrics = ref({
     desc: '',
     windspeed: 0,
     humidity: 0,
-    place: 'Haugesund'
+    place: 'Location'
 })
 
 onMounted(() => {
@@ -28,7 +28,7 @@ onMounted(() => {
             desc: content.desc ?? String(raw.content),
             windspeed: content.windspeed ?? 0,
             humidity: content.humidity ?? 0,
-            place: content.place ?? 'Haugesund'
+            place: content.place ?? 'Location'
         }
     }
     es.onerror = () => {
@@ -42,7 +42,7 @@ onMounted(() => {
 <template>
     <div class="app">
         <h1>📍 {{ metrics.place }}</h1>
-        <p class="status">{{ metrics.status === 'connected' ? '● LIVE' : '● FRAKOBLET' }}</p>
+        <p class="status">{{ metrics.status === 'connected' ? '● LIVE' : '● DISCONNECTED' }}</p>
         <p class="temp">{{ metrics.temp }}°C</p>
         <p class="desc">{{ metrics.desc }}</p>
         <p>💨 {{ metrics.windspeed }} m/s</p>
