@@ -10,6 +10,7 @@ For the docker-compose.yaml to work, it needs some environment variables.
     PORT_FRONTEND=3000:3000
     PORT_BACKEND=8080:80
     PORT_N8N=5678:5678
+    SECURE_COOKIE=true
     TIMEZONE=Europe/Oslo
     RESTART=always
 
