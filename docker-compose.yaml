@@ -17,7 +17,7 @@ services:
   frontend:
     build: ./vue
     ports:
-      - "80:80"
+      - "${PORT_FRONTEND}"
     depends_on:
       - backend
     networks:
