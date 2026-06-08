@@ -28,7 +28,7 @@ services:
     image: n8nio/n8n:latest
     restart: "${RESTART}"
     ports:
-      - "${PORT_BACKEND}"
+      - "${PORT_N8N}"
     networks:
       - app-network
     environment:
@@ -43,7 +43,7 @@ services:
   backend:
     build: ./cpp
     ports:
-      - "8080:80"
+      - "${PORT_BACKEND}"
     networks:
       - app-network
     volumes:

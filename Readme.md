@@ -8,7 +8,8 @@ For the docker-compose.yaml to work, it needs some environment variables.
     MYSQL_PASSWORD=your_password_here
     PORT_MYSQL=3306:3306
     PORT_FRONTEND=3000:3000
-    PORT_BACKEND=5678:5678
+    PORT_BACKEND=8080:80
+    PORT_N8N=5678:5678
     TIMEZONE=Europe/Oslo
     RESTART=always
 
