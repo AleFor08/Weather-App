@@ -32,8 +32,16 @@ For the docker-compose.yaml to work, it needs some environment variables.
     const fs = require('fs');
 
     const data = {
-    message: "sun",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    desc: $input.first().json.weather[0].description,
+    temp: $input.first().json.main.temp,
+    tempmin: $input.first().json.main.temp_min,
+    tempmax: $input.first().json.main.temp_max,
+    humidity: $input.first().json.main.humidity,
+    place: $input.first().json.name,
+    country: $input.first().json.sys.country,
+    winddeg: $input.first().json.wind.deg,
+    windspeed: $input.first().json.wind.speed
     };
 
     fs.writeFileSync(
@@ -46,7 +54,15 @@ For the docker-compose.yaml to work, it needs some environment variables.
         json: {
         success: true,
         timestamp: data.timestamp,
-        message: data.message
+        desc: data.desc,
+        temp: data.temp,
+        tempmin: data.tempmin,
+        tempmax: data.tempmax,
+        humidity: data.humidity,
+        place: data.place,
+        country: data.country,
+        winddeg: data.winddeg,
+        windspeed: data.windspeed
         }
     }
     ];
