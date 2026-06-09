@@ -11,7 +11,8 @@ const metrics = ref({
 })
 
 onMounted(() => {
-    const es = new EventSource('http://localhost:8080/metrics/stream')
+    const streamUrl = `${window.location.protocol}//${window.location.hostname}:8080/metrics/stream`
+    const es = new EventSource(streamUrl)
     es.onmessage = (ev) => {
         const raw = JSON.parse(ev.data) as any
         let content: Record<string, any> = {}
