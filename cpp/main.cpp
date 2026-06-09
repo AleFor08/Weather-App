@@ -17,6 +17,16 @@ int getUpdateFrequency() {
     return updateFrequency;
 }
 
+std::string getAllowedOrigin(const httplib::Request& req) {
+    const std::string origin = req.get_header_value("Origin");
+
+    if (!origin.empty()) {
+        return origin;
+    }
+
+    return "*";
+}
+
 std::string readSharedContent() {
     std::ifstream file("/shared/output.json");
 
@@ -35,12 +45,13 @@ int main() {
 
     httplib::Server server;
 
-    server.Get("/metrics/stream", [](const httplib::Request&, httplib::Response& res) {
+    server.Get("/metrics/stream", [](const httplib::Request& req, httplib::Response& res) {
         // Set headers
         res.set_header("Content-Type", "text/event-stream");
         res.set_header("Cache-Control", "no-cache");
         res.set_header("Connection", "keep-alive");
-        res.set_header("Access-Control-Allow-Origin", "http://localhost");
+        res.set_header("Access-Control-Allow-Origin", getAllowedOrigin(req));
+        res.set_header("Vary", "Origin");
 
         res.set_chunked_content_provider(
             "text/event-stream",
