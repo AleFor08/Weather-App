@@ -65,7 +65,16 @@ onMounted(() => {
 }
 
 h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.status { color: #28a745; margin-bottom: 1rem; }
+.status {
+    margin-bottom: 1rem;
+}
+.is-live {
+    color: #23923d
+}
+.is-disconnected {
+    color: #bd0f20
+}
+/* .status { color: #28a745; margin-bottom: 1rem; }*/
 .temp { font-size: 5rem; font-weight: bold; margin: 0; }
 .desc { font-size: 1.3rem; opacity: 0.8; margin-bottom: 1rem; text-transform: capitalize; }
 p { font-size: 1.1rem; margin: 0.3rem; }
