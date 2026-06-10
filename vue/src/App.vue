@@ -43,7 +43,8 @@ onMounted(() => {
 <template>
     <div class="app">
         <h1>📍 {{ metrics.place }}</h1>
-        <p class="status">{{ metrics.status === 'connected' ? '● LIVE' : '● DISCONNECTED' }}</p>
+        <p class="status" :class="metrics.status === 'connected' ? 'is-live' : 'is-disconnected'">
+            {{ metrics.status === 'connected' ? '● LIVE' : '● DISCONNECTED' }}</p>
         <p class="temp">{{ metrics.temp }}°C</p>
         <p class="desc">{{ metrics.desc }}</p>
         <p>💨 {{ metrics.windspeed }} m/s</p>
@@ -69,10 +70,10 @@ h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
     margin-bottom: 1rem;
 }
 .is-live {
-    color: #23923d
+    color: #23923d;
 }
 .is-disconnected {
-    color: #bd0f20
+    color: #bd0f20;
 }
 /* .status { color: #28a745; margin-bottom: 1rem; }*/
 .temp { font-size: 5rem; font-weight: bold; margin: 0; }
