@@ -24,7 +24,7 @@ For the docker-compose.yaml to work, it needs some environment variables.
 2) Run "docker compose up --build" in the root folder.
     - The first time you build the project, it may take a couple of minutes to start.
 
-3) run this in the container to give user access to shared volume:
+3) run this in the container to give user access to shared volume: (For some reason sometimes doesn't need to be done)
     - sudo chown -R 1000:1000 /var/lib/docker/volumes/shared_data/_data
 
 4) Add a code node in n8n to send variables via json to c++ backend to reach vue
