@@ -11,7 +11,7 @@
 // Use nlohmann::json for JSON handling
 using json = nlohmann::json;
 
-int updateFrequency = 500; // Update frequency
+int updateFrequency = 2500; // Update frequency
 
 int getUpdateFrequency() {
     return updateFrequency;
